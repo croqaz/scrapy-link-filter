@@ -1,10 +1,25 @@
+import json
 import logging
+from typing import Optional
 
 from scrapy.http import Request
-from scrapy.exceptions import NotConfigured
 from scrapy.linkextractors import LinkExtractor
 
 logger = logging.getLogger(__name__)
+
+
+def create_link_extractor(rules: str) -> Optional[LinkExtractor]:
+    """
+    Use the extraction rules defined per URL
+    and return a new FilteringLinkExtractor.
+    """
+    if not rules:
+        return
+    # Use these fields, ignore the rest
+    fields = ('allow', 'deny', 'allow_domains', 'deny_domains')
+    fixed_rules = {k: rules.get(k) for k in fields if rules.get(k)}
+    if fixed_rules:
+        return LinkExtractor(**fixed_rules)
 
 
 class LinkFilterMiddleware:
@@ -15,22 +30,16 @@ class LinkFilterMiddleware:
     def __init__(self, crawler):
         self.crawler = crawler
 
-    @classmethod
-    def from_crawler(cls, crawler):
-        if not crawler.settings.getbool('LINK_FILTER_ENABLED'):
-            raise NotConfigured
-        return cls(crawler)
-
     def process_spider_output(self, response, result, spider):
-        # Inspired from DepthMiddleware
+        extractor = None
+        if isinstance(getattr(spider, 'extract_rules', False), dict):
+            extractor = create_link_extractor(spider.extract_rules)
+
         def _filter(request):
-            if isinstance(request, Request) and response.meta.get('link_filtering'):
-                extractor = response.meta['link_filtering']
-                if isinstance(extractor, LinkExtractor):
-                    if not extractor.matches(request.url):
-                        logger.debug('Dropping link: %s', request.url, extra={'spider': spider})
-                        self.crawler.stats.inc_value('link_filtering/dropped_requests')
-                        return False
+            if extractor and isinstance(request, Request) and not extractor.matches(request.url):
+                logger.debug('Dropping link: %s', request.url, extra={'spider': spider})
+                self.crawler.stats.inc_value('link_filtering/dropped_requests')
+                return False
             return True
 
         return (r for r in result or () if _filter(r))
