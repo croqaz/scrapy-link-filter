@@ -51,5 +51,5 @@ class LinkFilterMiddleware:
 
 
 SPIDER_MIDDLEWARES = {
-    'link_filter.LinkFilterMiddleware': 950,
+    'scrapy_link_filter.middleware.LinkFilterMiddleware': 950,
 }
