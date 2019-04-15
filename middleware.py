@@ -1,4 +1,3 @@
-import json
 import logging
 from typing import Optional
 
@@ -24,16 +23,22 @@ def create_link_extractor(rules: str) -> Optional[LinkExtractor]:
 
 class LinkFilterMiddleware:
     """
-    Middleware that allows a Scrapy Spider to filter requests.
+    Spider Middleware that allows a Scrapy Spider to filter requests.
     """
 
     def __init__(self, crawler):
         self.crawler = crawler
 
+    @classmethod
+    def from_crawler(cls, crawler):
+        return cls(crawler)
+
     def process_spider_output(self, response, result, spider):
         extractor = None
         if isinstance(getattr(spider, 'extract_rules', False), dict):
-            extractor = create_link_extractor(spider.extract_rules)
+            rules = spider.extract_rules
+            logger.debug('Using extract rules: %s', rules, extra={'spider': spider})
+            extractor = create_link_extractor(rules)
 
         def _filter(request):
             if extractor and isinstance(request, Request) and not extractor.matches(request.url):
@@ -43,3 +48,8 @@ class LinkFilterMiddleware:
             return True
 
         return (r for r in result or () if _filter(r))
+
+
+SPIDER_MIDDLEWARES = {
+    'link_filter.LinkFilterMiddleware': 950,
+}
