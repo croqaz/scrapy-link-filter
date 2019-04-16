@@ -2,6 +2,7 @@ import logging
 from typing import Optional
 
 from scrapy.http import Request
+from scrapy.exceptions import IgnoreRequest
 from scrapy.linkextractors import LinkExtractor
 
 logger = logging.getLogger(__name__)
@@ -33,7 +34,22 @@ class LinkFilterMiddleware:
     def from_crawler(cls, crawler):
         return cls(crawler)
 
+    def process_request(self, request, spider):
+        """ Called as a Downloader Middleware """
+        if not isinstance(getattr(spider, 'extract_rules', False), dict):
+            return
+
+        extractor = None
+        if isinstance(getattr(spider, 'extract_rules', False), dict):
+            extractor = create_link_extractor(spider.extract_rules)
+
+        if extractor and isinstance(request, Request) and not extractor.matches(request.url):
+            logger.debug('Dropping link: %s', request.url, extra={'spider': spider})
+            self.crawler.stats.inc_value('link_filtering/dropped_requests')
+            raise IgnoreRequest("Link doesn't match extract rules")
+
     def process_spider_output(self, response, result, spider):
+        """ Called as a Spider Middleware """
         extractor = None
         if isinstance(getattr(spider, 'extract_rules', False), dict):
             extractor = create_link_extractor(spider.extract_rules)
@@ -47,6 +63,10 @@ class LinkFilterMiddleware:
 
         return (r for r in result or () if _filter(r))
 
+
+DOWNLOADER_MIDDLEWARES = {
+    'scrapy_link_filter.middleware.LinkFilterMiddleware': 950,
+}
 
 SPIDER_MIDDLEWARES = {
     'scrapy_link_filter.middleware.LinkFilterMiddleware': 950,
