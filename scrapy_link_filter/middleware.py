@@ -36,9 +36,7 @@ class LinkFilterMiddleware:
     def process_spider_output(self, response, result, spider):
         extractor = None
         if isinstance(getattr(spider, 'extract_rules', False), dict):
-            rules = spider.extract_rules
-            logger.debug('Using extract rules: %s', rules, extra={'spider': spider})
-            extractor = create_link_extractor(rules)
+            extractor = create_link_extractor(spider.extract_rules)
 
         def _filter(request):
             if extractor and isinstance(request, Request) and not extractor.matches(request.url):
