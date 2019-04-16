@@ -20,6 +20,7 @@ For the middleware to be enabled, it must be added in the project `settings.py`:
 ```
 SPIDER_MIDDLEWARES = {
     # maybe other Spider Middlewares ...
+    # can go after DepthMiddleware: 900
     'scrapy_link_filter.middleware.LinkFilterMiddleware': 950,
 }
 ```

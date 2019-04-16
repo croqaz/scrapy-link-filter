@@ -65,9 +65,11 @@ class LinkFilterMiddleware:
 
 
 DOWNLOADER_MIDDLEWARES = {
-    'scrapy_link_filter.middleware.LinkFilterMiddleware': 950,
+    # It goes before RobotsTxtMiddleware: 100
+    'scrapy_link_filter.middleware.LinkFilterMiddleware': 50,
 }
 
 SPIDER_MIDDLEWARES = {
+    # It goes after DepthMiddleware: 900
     'scrapy_link_filter.middleware.LinkFilterMiddleware': 950,
 }
