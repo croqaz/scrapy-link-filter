@@ -1,7 +1,8 @@
 # Scrapy-link-filter
 
 Spider Middleware that allows a Scrapy Spider to filter requests.
-There is a similar functionality in the [CrawlSpider](https://scrapy.readthedocs.io/en/latest/topics/spiders.html#crawlspider) already using Rules, but this middleware allows defining rules per job (and per domain WIP?)
+There is similar functionality in the [CrawlSpider](https://scrapy.readthedocs.io/en/latest/topics/spiders.html#crawlspider) already using Rules and in the [RobotsTxtMiddleware](https://scrapy.readthedocs.io/en/latest/topics/downloader-middleware.html#module-scrapy.downloadermiddlewares.robotstxt), but there are twists.
+This middleware allows defining rules dinamically per spider, or job, or request.
 
 
 ## Install

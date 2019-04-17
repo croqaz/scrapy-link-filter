@@ -1,5 +1,6 @@
 import logging
 from typing import Optional
+from collections.abc import Iterable
 
 from scrapy.http import Request
 from scrapy.exceptions import IgnoreRequest
@@ -12,12 +13,13 @@ def create_link_extractor(rules: str) -> Optional[LinkExtractor]:
     """
     Use the extraction rules defined per URL
     and return a new FilteringLinkExtractor.
+    Make sure the matching expressions are lower-case.
     """
     if not rules:
         return
     # Use these fields, ignore the rest
-    fields = ('allow', 'deny', 'allow_domains', 'deny_domains')
-    fixed_rules = {k: rules.get(k) for k in fields if rules.get(k)}
+    fields = ('allow', 'deny', 'allow_domains', 'deny_domains', 'restrict_text')
+    fixed_rules = {k: rules.get(k) for k in fields if isinstance(rules.get(k), Iterable)}
     if fixed_rules:
         return LinkExtractor(**fixed_rules)
 
@@ -39,29 +41,33 @@ class LinkFilterMiddleware:
         if not isinstance(getattr(spider, 'extract_rules', False), dict):
             return
 
-        extractor = None
-        if isinstance(getattr(spider, 'extract_rules', False), dict):
-            extractor = create_link_extractor(spider.extract_rules)
-
-        if extractor and isinstance(request, Request) and not extractor.matches(request.url):
+        extractor = self._create_extractor(spider, request)
+        if extractor and not extractor.matches(request.url):
             logger.debug('Dropping link: %s', request.url, extra={'spider': spider})
             self.crawler.stats.inc_value('link_filtering/dropped_requests')
             raise IgnoreRequest("Link doesn't match extract rules")
 
     def process_spider_output(self, response, result, spider):
         """ Called as a Spider Middleware """
-        extractor = None
-        if isinstance(getattr(spider, 'extract_rules', False), dict):
-            extractor = create_link_extractor(spider.extract_rules)
+        extractor = self._create_extractor(spider, response)
 
         def _filter(request):
-            if extractor and isinstance(request, Request) and not extractor.matches(request.url):
+            if extractor and isinstance(request, Request) and \
+                    not extractor.matches(request.url):
                 logger.debug('Dropping link: %s', request.url, extra={'spider': spider})
                 self.crawler.stats.inc_value('link_filtering/dropped_requests')
                 return False
             return True
 
         return (r for r in result or () if _filter(r))
+
+    def _create_extractor(self, spider, request):
+        rules = {}
+        if isinstance(getattr(spider, 'extract_rules', False), dict):
+            rules = spider.extract_rules
+        if isinstance(request.meta.get('extract_rules'), dict):
+            rules.update(request.meta['extract_rules'])
+        return create_link_extractor(rules)
 
 
 DOWNLOADER_MIDDLEWARES = {
