@@ -31,6 +31,7 @@ class LinkFilterMiddleware:
 
     def __init__(self, crawler):
         self.crawler = crawler
+        self.debug = self.crawler.settings.getbool('LINK_FILTER_MIDDLEWARE_DEBUG', False)
 
     @classmethod
     def from_crawler(cls, crawler):
@@ -43,7 +44,8 @@ class LinkFilterMiddleware:
 
         extractor = self._create_extractor(spider, request)
         if extractor and not extractor.matches(request.url.lower()):
-            logger.debug('Dropping link: %s', request.url, extra={'spider': spider})
+            if self.debug:
+                logger.debug('Dropping link: %s', request.url, extra={'spider': spider})
             self.crawler.stats.inc_value('link_filtering/dropped_requests')
             raise IgnoreRequest("Link doesn't match extract rules")
 
@@ -54,7 +56,8 @@ class LinkFilterMiddleware:
         def _filter(request):
             if extractor and isinstance(request, Request) and \
                     not extractor.matches(request.url.lower()):
-                logger.debug('Dropping link: %s', request.url, extra={'spider': spider})
+                if self.debug:
+                    logger.debug('Dropping link: %s', request.url, extra={'spider': spider})
                 self.crawler.stats.inc_value('link_filtering/dropped_requests')
                 return False
             return True
