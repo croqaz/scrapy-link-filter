@@ -11,8 +11,7 @@ logger = logging.getLogger(__name__)
 
 def create_link_extractor(rules: str) -> Optional[LinkExtractor]:
     """
-    Use the extraction rules defined per URL
-    and return a new FilteringLinkExtractor.
+    Use the extraction rules defined per URL and return a new LinkExtractor.
     Make sure the matching expressions are lower-case.
     """
     if not rules:
@@ -66,8 +65,10 @@ class LinkFilterMiddleware:
 
     def _create_extractor(self, spider, request):
         rules = {}
+        # Use the spider rules first
         if isinstance(getattr(spider, 'extract_rules', False), dict):
             rules = spider.extract_rules
+        # Update the spider rules with rules from the request
         if isinstance(request.meta.get('extract_rules'), dict):
             rules.update(request.meta['extract_rules'])
         return create_link_extractor(rules)

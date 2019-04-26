@@ -26,8 +26,9 @@ SPIDER_MIDDLEWARES = {
 }
 ```
 
-Also, the rules must be present in the spider instance, in a `spider.extract_rules` dict, for the middleware to use them.
+Also, the rules must be defined either in the spider instance, in a `spider.extract_rules` dict, or per request, in `request.meta['extract_rules']`.
 Internally, the extract_rules dict is converted into a [LinkExtractor](https://docs.scrapy.org/en/latest/topics/link-extractors.html), which is used to match the requests.
+
 
 Example of a specific allow filter:
 
