@@ -41,6 +41,8 @@ DOWNLOADER_MIDDLEWARES = {
 The rules must be defined either in the spider instance, in a `spider.extract_rules` dict, or per request, in `request.meta['extract_rules']`.
 Internally, the extract_rules dict is converted into a [LinkExtractor](https://docs.scrapy.org/en/latest/topics/link-extractors.html), which is used to match the requests.
 
+**Note** that the URL matching is case-sensitive by default. To enable case-insensitive matching, you can specify a "(?i)" inline flag, in the beggining of each "allow", or "deny" rule.
+
 
 Example of a specific allow filter:
 
