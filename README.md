@@ -41,27 +41,32 @@ DOWNLOADER_MIDDLEWARES = {
 The rules must be defined either in the spider instance, in a `spider.extract_rules` dict, or per request, in `request.meta['extract_rules']`.
 Internally, the extract_rules dict is converted into a [LinkExtractor](https://docs.scrapy.org/en/latest/topics/link-extractors.html), which is used to match the requests.
 
-**Note** that the URL matching is case-sensitive by default. To enable case-insensitive matching, you can specify a "(?i)" inline flag, in the beggining of each "allow", or "deny" rule.
+**Note** that the URL matching is case-sensitive by default, which works in most cases. To enable case-insensitive matching, you can specify a "(?i)" inline flag in the beggining of each "allow", or "deny" rule that needs to be case-insensitive.
 
 
-Example of a specific allow filter:
+Example of a specific allow filter, on a spider instance:
 
 ```py
-extract_rules = {"allow_domains": "example.com", "allow": "/en/items/"}
+from scrapy.spiders import Spider
+
+class MySpider(Spider):
+    extract_rules = {"allow_domains": "example.com", "allow": "/en/items/"}
 ```
 
-Or a specific deny filter:
+Or a specific deny filter, inside a request meta:
 
 ```py
-extract_rules = {
+request.meta['extract_rules'] = {
     "deny_domains": ["whatever.com", "ignore.me"],
     "deny": ["/privacy-policy/?$", "/about-?(us)?$"]
 }
 ```
 
-The allowed fields are:
+The possible fields are:
 * `allow_domains` and `deny_domains` - one, or more domains to specifically limit to, or specifically reject
 * `allow` and `deny` - one, or more sub-strings, or patterns to specifically allow, or reject
+
+All fields can be defined as string, list, set, or tuple.
 
 -----
 

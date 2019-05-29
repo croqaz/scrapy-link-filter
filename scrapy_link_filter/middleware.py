@@ -30,7 +30,7 @@ class LinkFilterMiddleware:
         if not extractor.matches(request.url):
             if self.debug:
                 logger.debug('Dropping request: %s', request, extra={'spider': spider})
-            self.crawler.stats.inc_value('link_filtering/d/dropped_requests')
+            self.crawler.stats.inc_value('link_filtering/downloader/dropped_requests')
             raise IgnoreRequest("Link doesn't match extract rules")
 
     def process_spider_output(self, response, result, spider):
@@ -41,7 +41,7 @@ class LinkFilterMiddleware:
             if extractor and isinstance(request, Request) and not extractor.matches(request.url):
                 if self.debug:
                     logger.debug('Dropping request: %s', request, extra={'spider': spider})
-                self.crawler.stats.inc_value('link_filtering/s/dropped_requests')
+                self.crawler.stats.inc_value('link_filtering/spider/dropped_requests')
                 return False
             return True
 
