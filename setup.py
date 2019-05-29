@@ -7,7 +7,7 @@ from setuptools import setup, find_packages
 # https://github.com/kennethreitz/setup.py ✨ 🍰 ✨
 
 NAME = 'scrapy-link-filter'
-DESCRIPTION = 'Spider Middleware that allows a Scrapy Spider to filter requests.'
+DESCRIPTION = 'Scrapy Middleware that allows a Scrapy Spider to filter requests.'
 KEYWORDS = 'scrapy link filter'
 URL = 'https://github.com/croqaz/scrapy-link-filter'
 AUTHOR = 'Cristi Constantin'
