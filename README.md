@@ -4,7 +4,7 @@
 
 Spider Middleware that allows a [Scrapy Spider](https://scrapy.readthedocs.io/en/latest/topics/spiders.html) to filter requests.
 There is similar functionality in the [CrawlSpider](https://scrapy.readthedocs.io/en/latest/topics/spiders.html#crawlspider) already using Rules and in the [RobotsTxtMiddleware](https://scrapy.readthedocs.io/en/latest/topics/downloader-middleware.html#module-scrapy.downloadermiddlewares.robotstxt), but there are twists.
-This middleware allows defining rules dinamically per spider, or job, or request.
+This middleware allows defining rules dinamically per request, or as spider arguments instead of project settings.
 
 
 ## Install
