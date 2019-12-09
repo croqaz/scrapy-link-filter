@@ -1,6 +1,8 @@
 # Scrapy-link-filter
 
-![Python 3.6](https://img.shields.io/badge/python-3.6-blue.svg) [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
+  [![Python ver][python-image]][python-url]
+  [![Build Status][build-image]][build-url]
+  [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
 
 Spider Middleware that allows a [Scrapy Spider](https://scrapy.readthedocs.io/en/latest/topics/spiders.html) to filter requests.
 There is similar functionality in the [CrawlSpider](https://scrapy.readthedocs.io/en/latest/topics/spiders.html#crawlspider) already using Rules and in the [RobotsTxtMiddleware](https://scrapy.readthedocs.io/en/latest/topics/downloader-middleware.html#module-scrapy.downloadermiddlewares.robotstxt), but there are twists.
@@ -73,3 +75,9 @@ All fields can be defined as string, list, set, or tuple.
 ## License
 
 [BSD3](LICENSE) © Cristi Constantin.
+
+
+[build-image]: https://github.com/croqaz/scrapy-link-filter/workflows/Python/badge.svg
+[build-url]: https://github.com/croqaz/scrapy-link-filter/actions
+[python-image]: https://img.shields.io/badge/Python-3.6-blue.svg
+[python-url]: https://python.org
