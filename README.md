@@ -15,7 +15,7 @@ This middleware allows defining rules dinamically per request, or as spider argu
 This project requires [Python 3.6+](https://www.python.org/) and [pip](https://pip.pypa.io/). Using a [virtual environment](https://virtualenv.pypa.io/) is strongly encouraged.
 
 ```sh
-$ pip install git+https://github.com/croqaz/scrapy-link-filter
+$ pip install scrapy-link-filter
 ```
 
 
