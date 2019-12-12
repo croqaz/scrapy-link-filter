@@ -11,7 +11,7 @@ DESCRIPTION = 'Scrapy Middleware that allows a Scrapy Spider to filter requests.
 KEYWORDS = 'scrapy link filter'
 URL = 'https://github.com/croqaz/scrapy-link-filter'
 AUTHOR = 'Cristi Constantin'
-EMAIL = 'cristi.constantin@live.com'
+EMAIL = 'cristi.constantin@speedpost.net'
 
 REQUIRES_PYTHON = '>=3.6.0'
 REQUIRED = []
