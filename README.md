@@ -2,6 +2,7 @@
 
   [![Python ver][python-image]][python-url]
   [![Build Status][build-image]][build-url]
+  [![Code coverage][cover-image]][cover-url]
   [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
 
 Spider Middleware that allows a [Scrapy Spider](https://scrapy.readthedocs.io/en/latest/topics/spiders.html) to filter requests.
@@ -79,5 +80,7 @@ All fields can be defined as string, list, set, or tuple.
 
 [build-image]: https://github.com/croqaz/scrapy-link-filter/workflows/Python/badge.svg
 [build-url]: https://github.com/croqaz/scrapy-link-filter/actions
+[cover-image]: https://codecov.io/gh/croqaz/scrapy-link-filter/branch/master/graph/badge.svg
+[cover-url]: https://codecov.io/gh/croqaz/scrapy-link-filter
 [python-image]: https://img.shields.io/badge/Python-3.6-blue.svg
 [python-url]: https://python.org
