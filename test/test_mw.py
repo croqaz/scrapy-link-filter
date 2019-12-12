@@ -62,3 +62,14 @@ def test_deny():
 
     spider.extract_rules = {'deny': 'x'}
     mw.process_request(req, spider)
+
+
+def test_request_meta():
+    spider = Spider('spidr')
+    mw = _mock_mw(spider)
+
+    meta = {'extract_rules': {'deny': '(?i)quotes'}}
+    req = Request('http://quotes.toscrape.com', meta=meta)
+
+    with pytest.raises(IgnoreRequest):
+        mw.process_request(req, spider)
