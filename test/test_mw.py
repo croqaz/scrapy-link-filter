@@ -64,6 +64,24 @@ def test_deny():
     mw.process_request(req, spider)
 
 
+def test_spider_mw():
+    spider = Spider('spidr')
+    spider.extract_rules = {'allow': 'quotes'}
+    mw = _mock_mw(spider)
+
+    req = Request('http://quotes.toscrape.com')
+
+    # Requests are allowed to pass
+    gen = mw.process_spider_output(req, [req], spider)
+    assert list(gen) == [req]
+
+    spider.extract_rules = {'deny': 'quotes'}
+
+    # Requests are denied
+    gen = mw.process_spider_output(req, [req], spider)
+    assert list(gen) == []
+
+
 def test_request_meta():
     spider = Spider('spidr')
     mw = _mock_mw(spider)

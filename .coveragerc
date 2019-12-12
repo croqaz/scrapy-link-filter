@@ -9,6 +9,7 @@ exclude_lines =
     except ModuleNotFoundError.*
     warnings\.warn.*
     logger\.debug.*
+    VERSION
     __version__
     def __repr__
     def __str__
